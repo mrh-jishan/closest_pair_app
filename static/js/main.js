@@ -4,6 +4,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const runButton = document.getElementById('run_button');
     const nInput = document.getElementById('n_input');
+    const allNInput = document.getElementById('all_n_input');
     const loadingDiv = document.getElementById('loading');
     const resultsArea = document.getElementById('results_area');
     const nDisplayViz = document.getElementById('n_display_viz');
@@ -43,6 +44,17 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        // Parse the comma-separated list of n-values for the graphs
+        const allNString = allNInput.value;
+        const allN = allNString.split(',')
+            .map(s => parseInt(s.trim(), 10))
+            .filter(num => !isNaN(num) && num > 1);
+
+        if (allN.length === 0) {
+            alert("Please enter at least one valid n-value for the graphs.");
+            return;
+        }
+
         loadingDiv.classList.remove('hidden');
         resultsArea.classList.add('hidden');
 
@@ -50,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch('/run-experiment', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ n: n, all_n: [1000, 2000, 5000, 10000, 15000, 20000] }) // Send a fixed set of n for full graph
+                body: JSON.stringify({ n: n, all_n: allN }) // Send a fixed set of n for full graph
             });
 
             if (!response.ok) {
