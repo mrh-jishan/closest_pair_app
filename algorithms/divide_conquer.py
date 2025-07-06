@@ -11,8 +11,12 @@ def divide_and_conquer_closest_pair(points):
     return _dac_recursive(px, py)
 
 def _dac_recursive(px, py):
+    # Base Case
     if len(px) <= 3:
+        # find the closest pair by measuring all pairwise distances
         return brute_force_closest_pair(px)
+    
+    # Divide
     mid = len(px) // 2
     midpoint = px[mid]
     qx = px[:mid]
@@ -20,6 +24,7 @@ def _dac_recursive(px, py):
     qy = [p for p in py if p[0] <= midpoint[0]]
     ry = [p for p in py if p[0] > midpoint[0]]
 
+    # Conquer
     (p1, d1) = _dac_recursive(qx, qy)
     (p2, d2) = _dac_recursive(rx, ry)
     d = min(d1, d2)
